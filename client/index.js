@@ -39,13 +39,21 @@ myApp.controller('AutomationPocCtrl', ['$scope', function($scope){
 
   socket.on('results', function(results){
     console.log(results);
+    $scope.connection[results.id].props = results.props;
+    $scope.$apply();
   });
 
   $scope.connect = function() {
     console.log('Connecting to ip ' + $scope.ip + ' port ' + $scope.port);
-    var connection = {ip: $scope.ip, port: $scope.port, id: $scope.ip + ':' + $scope.port, status: 'conectando'};
+    var connection = {
+      ip: $scope.ip,
+      port: $scope.port,
+      id: $scope.ip + ':' + $scope.port,
+      status: 'conectando',
+      endPointUrl: 'opc.tcp://' + $scope.id + '/';
+    };
     $scope.connections[connection.id] = connection;
-    socket.emit('connectRemote', {ip: $scope.ip, port: $scope.port});
+    socket.emit('connectRemote', connection);
     reset();
   };
 
