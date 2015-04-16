@@ -1,0 +1,21 @@
+{
+  "name": "poc",
+  "version": "0.0.0",
+  "authors": [
+    "Filipe Forneck <fforneck@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "socket.io-client": "~1.3.5",
+    "jquery": "~2.1.3",
+    "bootstrap": "~3.3.4",
+    "angular": "~1.3.15"
+  }
+}
