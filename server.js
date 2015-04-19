@@ -31,19 +31,35 @@ io.on('connection', function (socket) {
 
 		async.series([
 			function(callback){
-				client.connect(connection.endPointUrl, callback);
-				connection.status = 'Conectado';
-				socket.emit('remoteConnectionUpdate', connection);
-				callback(null, 'connectRemoteSuccess');
+				console.log('Connecting ' + connection.endPointUrl + '...');
+				client.connect(connection.endPointUrl, function(error){
+					if (!error) {
+						connection.status = 'Conectado';
+						console.log('Connected ' + connection.endPointUrl + '.');
+
+					} else {
+						connection.status = 'Não Conectado';
+						console.log('Not connected ' + connection.endPointUrl + '.');
+						console.log(error);
+					}
+					socket.emit('remoteConnectionUpdate', connection);
+					callback(error);
+				});
 			},
 			function(callback) {
-				client.createSession(function (err, newSession){
-					if (!err) {
+				console.log('Creating session ' + connection.endPointUrl + '...');
+				client.createSession(function (error, newSession){
+					if (!error) {
 						session = newSession;
 						connection.status = 'Sessão criada';
-						socket.emit('sessionRemoteSuccess', connection);
+						console.log('Created session ' + connection.endPointUrl + '.');
+					} else {
+						connection.status = 'Sessão não criada';
+						console.log('Session not created ' + connection.endPointUrl + '.');
+						console.log(error);
 					}
-					callback(err);
+					socket.emit('remoteConnectionUpdate', connection);
+					callback(error);
 				});	
 			},
 			// function(callback) {
@@ -68,9 +84,17 @@ io.on('connection', function (socket) {
 
 			// },
 			function(callback) {
-				connection.props = navigateTree("RootFolder");
-				socket.emit("remoteConnectionUpdate", connection);
-				callback(null);
+				console.log('Populating props ' + connection.endPointUrl + '...');
+				session.browse("RootFolder", function(error, results) {
+					if (!error) {
+						connection.props = results;
+						console.log('Props populated ' + connection.endPointUrl + '.');
+					} else {
+						console.log('Props not populated ' + connection.endPointUrl + '.');
+						console.log(error);
+					}
+					socket.emit('remoteConnectionUpdate', connection);
+				});
 			}
 		], function(err){
 			if (!err){
@@ -80,15 +104,15 @@ io.on('connection', function (socket) {
 			}
 		});
 
-		function navigateTree(nodeName) {
+		function navigateTree(nodeName, session) {
 			var ret = [];
 			session.browse(nodeName, function(err, results, diagnostics){
 				if (results) {
 					results.forEach(function(item){
 						ret.push({
-							nodeId: xxx,
-							nodeName: xxx,
-							children: navigateTree(xxx);
+							nodeId: 1,
+							nodeName: 2,
+							children: navigateTree(3)
 						});
 					});
 				}

@@ -17,19 +17,21 @@ myApp.controller('AutomationPocCtrl', ['$scope', function($scope){
 
 	socket.on('remoteConnectionUpdate', function(connection){
 		console.log('remoteConnectionUpdate ' + connection.id);
-		$scope.connection[connection.id] = connecion;
+		$scope.connections[connection.id] = connection;
+		console.log(connection.props);
 		$scope.$apply();
 	});
 
 	$scope.connect = function() {
 		console.log('Connecting to ip ' + $scope.ip + ' port ' + $scope.port);
-		var connection = {
-			ip: $scope.ip,
-			port: $scope.port,
-			id: $scope.ip + ':' + $scope.port,
-			status: 'conectando',
-			endPointUrl: 'opc.tcp://' + $scope.id + '/';
-		};
+		var id = $scope.ip + ':' + $scope.port,
+				connection = {
+					ip: $scope.ip,
+					port: $scope.port,
+					id: id,
+					status: 'conectando',
+					endPointUrl: 'opc.tcp://' + id + '/'
+				};
 		$scope.connections[connection.id] = connection;
 		socket.emit('connectRemote', connection);
 		reset();
