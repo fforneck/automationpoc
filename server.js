@@ -87,7 +87,24 @@ io.on('connection', function (socket) {
 				console.log('Populating props ' + connection.endPointUrl + '...');
 				session.browse("RootFolder", function(error, results) {
 					if (!error) {
-						connection.props = results;
+						connection.props = [];
+						results.forEach(function(entry){
+							console.log('description = "' + entry.statusCode.description + '"');
+							console.log('name = "' + entry.statusCode.name + '"');
+							console.log('value = "' + entry.statusCode.value + '"');
+							if (entry.references) {
+								entry.references.forEach(function(reference){
+									connection.props.push({
+										browseName: reference.browseName.name,
+										namespaceIndex: reference.browseName.namespaceIndex,
+										displayName: reference.displayName.text,
+										nodeClass: reference.nodeClass,
+										nodeId: reference.nodeId
+									});
+								});
+							}
+							
+						});
 						console.log('Props populated ' + connection.endPointUrl + '.');
 					} else {
 						console.log('Props not populated ' + connection.endPointUrl + '.');

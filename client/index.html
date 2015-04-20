@@ -8,26 +8,28 @@
 	</head>
 	<body>
 		<div class="container" ng-controller="AutomationPocCtrl">
-			<div class="row panel">
-				<form ng-submit="connect()">
-					<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-						<div class="form-group">
-							<label>IP:</label>
-							<input type="text" class="span6" ng-model="ip" placeholder="IP">
+			<div class="row panel panel-default">
+				<div class="panel-body">
+					<form ng-submit="connect()">
+						<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+							<div class="form-group">
+								<label>IP:</label>
+								<input type="text" class="span6" ng-model="ip" placeholder="IP">
+							</div>
 						</div>
-					</div>
-					<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-						<div class="form-group">
-							<label>Port:</label>
-							<input type="text" class="span6" ng-model="port" placeholder="Port">
+						<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+							<div class="form-group">
+								<label>Port:</label>
+								<input type="text" class="span6" ng-model="port" placeholder="Port">
+							</div>
 						</div>
-					</div>
-					<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-						<div class="form-group">
-							<input type="submit" class="span1 btn btn-primary" value="Conectar" ng-disabled="!ip || !port">
+						<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+							<div class="form-group">
+								<input type="submit" class="span1 btn btn-primary" value="Conectar" ng-disabled="!ip || !port">
+							</div>
 						</div>
-					</div>
-				</form>
+					</form>
+				</div>
 			</div>
 			<div class="row panel">
 				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -49,9 +51,9 @@
 								<td>
 									<div
 										data-angular-treeview="true"
-										data-tree-model="connection.tree"
+										data-tree-model="connection.props"
 										data-node-id="nodeId"
-										data-node-label="nodeName"
+										data-node-label="displayName"
 										data-node-children="children" >
 									</div>
 								</td>
