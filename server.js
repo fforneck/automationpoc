@@ -85,33 +85,8 @@ io.on('connection', function (socket) {
 			// },
 			function(callback) {
 				console.log('Populating props ' + connection.endPointUrl + '...');
-				session.browse("RootFolder", function(error, results) {
-					if (!error) {
-						connection.props = [];
-						results.forEach(function(entry){
-							console.log('description = "' + entry.statusCode.description + '"');
-							console.log('name = "' + entry.statusCode.name + '"');
-							console.log('value = "' + entry.statusCode.value + '"');
-							if (entry.references) {
-								entry.references.forEach(function(reference){
-									connection.props.push({
-										browseName: reference.browseName.name,
-										namespaceIndex: reference.browseName.namespaceIndex,
-										displayName: reference.displayName.text,
-										nodeClass: reference.nodeClass,
-										nodeId: reference.nodeId
-									});
-								});
-							}
-							
-						});
-						console.log('Props populated ' + connection.endPointUrl + '.');
-					} else {
-						console.log('Props not populated ' + connection.endPointUrl + '.');
-						console.log(error);
-					}
-					socket.emit('remoteConnectionUpdate', connection);
-				});
+				connection.props = [];
+				navigateTree(session, connection.props, "RootFolder");
 			}
 		], function(err){
 			if (!err){
@@ -121,20 +96,37 @@ io.on('connection', function (socket) {
 			}
 		});
 
-		function navigateTree(nodeName, session) {
-			var ret = [];
+		function navigateTree(session, parent, nodeName) {
+			console.log('Browsing node "' + nodeName + '"...');
 			session.browse(nodeName, function(err, results, diagnostics){
-				if (results) {
-					results.forEach(function(item){
-						ret.push({
-							nodeId: 1,
-							nodeName: 2,
-							children: navigateTree(3)
-						});
+				if (!error) {
+					results.forEach(function(entry){
+						console.log('description = "' + entry.statusCode.description + '"');
+						console.log('name = "' + entry.statusCode.name + '"');
+						console.log('value = "' + entry.statusCode.value + '"');
+						if (entry.references) {
+							entry.references.forEach(function(reference){
+								var children = [];
+								parent.push({
+									browseName: reference.browseName.name,
+									namespaceIndex: reference.browseName.namespaceIndex,
+									displayName: reference.displayName.text,
+									nodeClass: reference.nodeClass,
+									nodeId: reference.nodeId,
+									children: children
+								});
+								socket.emit('remoteConnectionUpdate', connection);
+								navigateTree(session, children, reference.browseName.name);
+							});
+						}
+
 					});
+					console.log('Browsed node "' + nodeName + '"...');
+				} else {
+					console.log('Error browsing node "' + nodeName + '":');
+					console.log(error);
 				}
 			});
-			return ret;
 		}
 	});
 
