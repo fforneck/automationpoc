@@ -57,7 +57,9 @@
 										data-node-children="children" >
 									</div>
 								</td>
-								<td><button class="btn btn-primary" ng-click="disconnect(connection)" ng-disabled="connection.status != 'conectado'">Desconectar</button></td>
+								<td>
+									<button class="btn btn-primary" ng-click="disconnect(connection)" ng-enabled="connection.status && connection.status != 'conectando'">Desconectar</button>
+								</td>
 							</tr>
 						</tbody>
 					</table>

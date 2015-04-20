@@ -1,5 +1,5 @@
 
-var myApp = angular.module('poc', []);
+var myApp = angular.module('poc', ['angularTreeview']);
 
 myApp.controller('AutomationPocCtrl', ['$scope', function($scope){
 	
