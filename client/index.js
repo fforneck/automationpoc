@@ -30,7 +30,9 @@ myApp.controller('AutomationPocCtrl', ['$scope', function($scope){
 					port: $scope.port,
 					id: id,
 					status: 'conectando',
-					endPointUrl: 'opc.tcp://' + id + '/'
+					endPointUrl: 'opc.tcp://' + id + '/',
+					nodeName: "RootFolder",
+					browseResults: []
 				};
 		$scope.connections[connection.id] = connection;
 		socket.emit('connectRemote', connection);
@@ -40,6 +42,11 @@ myApp.controller('AutomationPocCtrl', ['$scope', function($scope){
 	$scope.disconnect = function(connection){
 		console.log('Disconnecting of ip ' + connection.ip + ' port ' + connection.port);
 		socket.emit('disconnectRemote', connection);
+	};
+
+	$scope.browseNode = function(connection){
+		console.log('Browsing node ' + connection.nodeName + ' of ' + connection.id);
+		socket.emit('browseNode', connection);
 	};
 
 	function reset(){

@@ -56,6 +56,77 @@
 										data-node-label="displayName"
 										data-node-children="children" >
 									</div>
+									<input type="text" class="span6" ng-model="connection.nodeName" placeholder="RootFolder">
+									<button class="btn btn-primary" data-ng-click="browseNode(connection)">Browse</button>
+									<table class="table">
+										<thead>
+											<tr>
+												<th>attributeId</th>
+												<th>dataEncoding.name</th>
+												<th>dataEncoding.nameSpaceIndex</th>
+												<th>indexRange</th>
+												<th>nodeId</th>
+												<th>serverPicoseconds</th>
+												<th>serverTimestamp</th>
+												<th>sourcePicoseconds</th>
+												<th>statusCode.description</th>
+												<th>statusCode.name</th>
+												<th>statusCode.value</th>
+												<th>value.arrayType</th>
+												<th>value.dataType</th>
+												<th>value.value</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr data-ng-repeat="node in connection.nodesToRead">
+												<td>{{node.attributeId}}</td>
+												<td>{{node.dataEncoding.name}}</td>
+												<td>{{node.dataEncoding.nameSpaceIndex}}</td>
+												<td>{{node.indexRange}}</td>
+												<td>{{node.nodeId}}</td>
+												<td>{{connection.allAttributes[$index].serverPicoseconds}}</td>
+												<td>{{connection.allAttributes[$index].serverTimestamp}}</td>
+												<td>{{connection.allAttributes[$index].sourcePicoseconds}}</td>
+												<td>{{connection.allAttributes[$index].statusCode.description}}</td>
+												<td>{{connection.allAttributes[$index].statusCode.name}}</td>
+												<td>{{connection.allAttributes[$index].statusCode.value}}</td>
+												<td>{{connection.allAttributes[$index].value.arrayType}}</td>
+												<td>{{connection.allAttributes[$index].value.dataType}}</td>
+												<td>{{connection.allAttributes[$index].value.value}}</td>
+											</tr>
+										</tbody>
+									</table>
+									<div data-ng-repeat="result in connection.browseResults">
+										<label>Description:</label>{{result.statusCode.description}}
+										<label>Name:</label>{{result.statusCode.name}}
+										<label>Number of references:</label>{{result.references.length}}
+										<table class="table">
+											<thead>
+												<tr>
+													<th>referenceTypeId</th>
+													<th>isForward</th>
+													<th>nodeId</th>
+													<th>browseName.namespaceIndex</th>
+													<th>browseName.name</th>
+													<th>displayName.text</th>
+													<th>nodeClass</th>
+													<th>typeDefinition</th>	
+												</tr>
+											</thead>
+											<tbody>
+												<tr data-ng-repeat="ref in result.references">
+													<td>{{ref.referenceTypeId}}</td>
+													<td>{{ref.isForward}}</td>
+													<td>{{ref.nodeId}}</td>
+													<td>{{ref.browseName.namespaceIndex}}</td>
+													<td>{{ref.browseName.name}}</td>
+													<td>{{ref.displayName.text}}</td>
+													<td>{{ref.nodeClass}}</td>
+													<td>{{ref.typeDefinition}}</td>	
+												</tr>
+											</tbody>
+										</table>
+									</div>
 								</td>
 								<td>
 									<button class="btn btn-primary" ng-click="disconnect(connection)" ng-enabled="connection.status && connection.status != 'conectando'">Desconectar</button>
