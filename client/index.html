@@ -58,6 +58,21 @@
 									</div>
 									<input type="text" class="span6" ng-model="connection.nodeName" placeholder="RootFolder">
 									<button class="btn btn-primary" data-ng-click="browseNode(connection)">Browse</button>
+									<div>
+										NodeId:<input type="text" class="span6" ng-model="connection.readNode" placeholder="ns=5;i=6038">
+										<button class="btn btn-primary" data-ng-click="readNode(connection)">Read</button>
+										Last Value: {{connection.readValue}}										
+									</div>
+									<div>
+										NodeId:<input type="text" class="span6" ng-model="connection.writeNode" placeholder="ns=5;i=6038">
+										DataType:<input type="text" class="span6" ng-model="connection.writeValue.dataType" placeholder="Boolean">
+										ArrayType:{{connection.writeValue.arrayType}}
+										Value:{{connection.writeValue.value}}
+										<button class="btn btn-primary" data-ng-click="writeNode(connection)">Write</button>
+										statusCode.description: {{connection.writeStatusCode[0].description}}
+										statusCode.name: {{connection.writeStatusCode[0].name}}
+										statusCode.value: {{connection.writeStatusCode[0].value}}
+									</div>
 									<table class="table">
 										<thead>
 											<tr>

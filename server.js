@@ -210,6 +210,64 @@ io.on('connection', function (socket) {
 		});
 	});
 
+	socket.on('readNode', function(connection){
+		console.log('Read node ' + connection.nodeName + ' of ' + connection.id);
+		opcuaServers[connection.id].connection.readNode = connection.readNode;
+		async.series([
+			function(callback){
+				opcuaServers[connection.id].session.readVariableValue(connection.readNode, function(error, results, diagnostics){
+					if (!error) {
+						console.log('Read node ' + connection.nodeName + ' of ' + connection.id + '.');
+					} else {
+						console.log('Could not read node ' + connection.nodeName + ' of ' + connection.id + '.');
+						console.log(JSON.stringify(error));
+					}
+					opcuaServers[connection.id].connection.readValue = results;
+					socket.emit('remoteConnectionUpdate', opcuaServers[connection.id].connection);
+					callback(error);
+				});
+			}
+		], function(err){
+			if (!err){
+				console.log('Sem erro!');
+			} else {
+				console.log('Com erro!');
+				console.log(err);
+			}
+		});
+	});
+
+	socket.on('writeNode', function(connection){
+		console.log('Write node ' + connection.nodeName + ' of ' + connection.id);
+		opcuaServers[connection.id].connection.writeNode = connection.writeNode;
+		opcuaServers[connection.id].connection.writeValue = connection.writeValue;
+		async.series([
+			function(callback){
+				console.log('writeValue = ' + JSON.stringify(connection.writeValue));
+				opcuaServers[connection.id].session.write([{nodeId: connection.writeNode, attributeId: 13, indexRange: null, value: {value: connection.writeValue}}], function(error, statusCode, diagnostics){
+					console.log(JSON.stringify(statusCode));
+					console.log(JSON.stringify(diagnostics));
+					if (!error) {
+						console.log('Wrote node ' + connection.writeNode + ' of ' + connection.id + '.');
+					} else {
+						console.log('Could not write node ' + connection.writeNode + ' of ' + connection.id + '.');
+						console.log(JSON.stringify(error));
+					}
+					opcuaServers[connection.id].connection.writeStatusCode = statusCode;
+					socket.emit('remoteConnectionUpdate', opcuaServers[connection.id].connection);
+					callback(error);
+				});
+			}
+		], function(err){
+			if (!err){
+				console.log('Sem erro!');
+			} else {
+				console.log('Com erro!');
+				console.log(err);
+			}
+		});
+	});
+
 	socket.emit('message', 'welcome');
 });
 

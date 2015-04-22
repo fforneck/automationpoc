@@ -32,7 +32,16 @@ myApp.controller('AutomationPocCtrl', ['$scope', function($scope){
 					status: 'conectando',
 					endPointUrl: 'opc.tcp://' + id + '/',
 					nodeName: "RootFolder",
-					browseResults: []
+					browseResults: [],
+					readNode: null,
+					readValue: null,
+					writeNode: "ns=5;i=6038",
+					writeValue: {
+						dataType: "Boolean", 
+						arrayType: 0x00, 
+						value: false
+					},
+					writeStatusCode: null
 				};
 		$scope.connections[connection.id] = connection;
 		socket.emit('connectRemote', connection);
@@ -47,6 +56,17 @@ myApp.controller('AutomationPocCtrl', ['$scope', function($scope){
 	$scope.browseNode = function(connection){
 		console.log('Browsing node ' + connection.nodeName + ' of ' + connection.id);
 		socket.emit('browseNode', connection);
+	};
+
+	$scope.readNode = function(connection){
+		console.log('Reading node ' + connection.nodeName + ' of ' + connection.id);
+		socket.emit('readNode', connection);
+	};
+
+	$scope.writeNode = function(connection){
+		console.log('Writeing node ' + connection.nodeName + ' of ' + connection.id);
+		connection.writeValue.value = false;
+		socket.emit('writeNode', connection);
 	};
 
 	function reset(){
